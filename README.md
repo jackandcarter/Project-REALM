@@ -3,6 +3,7 @@ Project: REALM is a community project dedicated to the development of REALM MMOR
 REALM is planned to be an open world fantasy role-playing adventure. At the moment the world is in a pre-development state.<br>
 This means that it is constantly being reworked, torn down and rebuilt, it's full of bugs and emtpy place-holder objects, and so on.
 <BR>
+<BR>The Auth Server, Realm Server, and World Servers and their SQL database structures are being worked on and have basic functionality and info.
 <BR>
 Right now the focus is on the authentication, user account front end and account creation, realm selection, character selection, and world placement.<BR>
 <BR>
@@ -13,7 +14,7 @@ Dynamic Input Manager (DIM) - The user input for casting/attacking/etc will also
 Spell and Ability Fusion (FUSE) - A manager to allow spell fusion to melee and other weapons and attacks.<BR>
 Dynamic Building Plots - (PLOT) - A system to handle dynamic building plot locaitons based on terrain features.<BR>
 Arkitect - A sophisticated and advanced building UI and system for players to create buildings and contructs on Plots. <BR>
-Open World Building - Players will be able to create empires, similar to guilds in other MMOs, large structures, and buildings and rule small kingdoms dynamically in realm time. <BR>
+Open World Building - Players will be able to create empires (similar to guilds in other MMOs), large structures such as castles, and create community settlements that can progress. <BR>
 <BR>
 <BR>
-I will add more to the list as I confirm their mechanics and have more details on them.
+We will add more to the list as features are confirmed and their mechanics and have more details.
