@@ -3,11 +3,11 @@ Project: REALM is a community project dedicated to the development of REALM MMOR
 REALM is planned to be an open world fantasy role-playing adventure. At the moment the world is in a pre-development state.<br>
 This means that it is constantly being reworked, torn down and rebuilt, it's full of bugs and emtpy place-holder objects, and so on.
 <BR>
-<BR>The Auth Server, Realm Server, and World Servers and their SQL database structures are being worked on and have basic functionality and info.
+<BR>The Auth Server, Realm Server, and World Servers along with their Databases have been extensively developed with structures in place for implementing features easily.
 <BR>
 Right now the focus is on the authentication, user account front end and account creation, realm selection, character selection, and world placement.<BR>
 <BR>
-Once this has been expanded on the next focus will be the UI Design. Here are some features planned for REALM:<BR>
+Once this has been expanded upon, the next focus will be the UI Design and Manager scripts. Here are some features planned for REALM:<BR>
 <BR>
 Dynamic Changing Interface (DCI) - The interface will change based on current class.<BR>
 Dynamic Input Manager (DIM) - The user input for casting/attacking/etc will also change based on the Class.<BR>
