@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import pymysql
 import logging
 import json
+import os
 
 app = Flask(__name__)
 
@@ -17,7 +18,8 @@ logging.basicConfig(
 
 # Database Connection Helper
 def get_db_connection():
-    with open("config/server_config.json", "r") as file:
+    config_path = os.path.join(os.path.dirname(__file__), "..", "config.json")
+    with open(config_path, "r") as file:
         config = json.load(file)
     return pymysql.connect(
         host=config["mysql_host"],
