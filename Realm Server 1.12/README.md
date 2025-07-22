@@ -25,6 +25,9 @@ If a `requirements.txt` file is available, you can instead run:
 pip install -r requirements.txt
 ```
 
+The requirements now include `bcrypt` which the authentication service uses to
+securely hash passwords.
+
 ## Running the server
 
 From this directory execute:
