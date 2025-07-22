@@ -34,3 +34,13 @@ python main_server.py
 ```
 
 The script loads your configuration, verifies the databases and then starts all extension services found in the `extensions` folder. Logs are written to the `logs` directory.
+
+## Running tests
+
+The backend uses `pytest` for its unit tests. After installing the requirements, run the test suite from this directory with:
+
+```bash
+pytest
+```
+
+This will automatically discover tests under the `tests/` folder.
