@@ -1,0 +1,176 @@
+from flask import Flask, request, jsonify
+import pymysql
+import logging
+
+app = Flask(__name__)
+
+# Logger Setup
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("logs/auth_service.log"),
+        logging.StreamHandler()
+    ]
+)
+
+# Database Connection Helper
+def get_db_connection():
+    with open("config/server_config.json", "r") as file:
+        config = json.load(file)
+    return pymysql.connect(
+        host=config["mysql_host"],
+        user=config["mysql_user"],
+        password=config["mysql_password"],
+        database=config["databases"]["auth"]
+    )
+
+# -------------------------
+# User Management APIs
+# -------------------------
+
+@app.route("/auth/register", methods=["POST"])
+def register_user():
+    """Register a new user."""
+    data = request.json
+    username = data.get("username")
+    password_hash = data.get("password_hash")
+    permission_level = data.get("permission_level", 0)
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO users (username, password_hash, permission_level) VALUES (%s, %s, %s)",
+                (username, password_hash, permission_level)
+            )
+        connection.commit()
+        logging.info(f"User '{username}' registered successfully.")
+        return jsonify({"status": "success", "message": f"User '{username}' registered."})
+    except pymysql.IntegrityError:
+        logging.warning(f"Registration failed: Username '{username}' already exists.")
+        return jsonify({"status": "failed", "message": "Username already exists."}), 400
+    finally:
+        connection.close()
+
+@app.route("/auth/delete", methods=["DELETE"])
+def delete_user():
+    """Delete a user."""
+    data = request.json
+    username = data.get("username")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM users WHERE username = %s", (username,))
+        connection.commit()
+        logging.info(f"User '{username}' deleted.")
+        return jsonify({"status": "success", "message": f"User '{username}' deleted."})
+    finally:
+        connection.close()
+
+@app.route("/auth/update", methods=["PUT"])
+def update_user():
+    """Update user details."""
+    data = request.json
+    username = data.get("username")
+    new_password_hash = data.get("password_hash")
+    new_permission_level = data.get("permission_level")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            if new_password_hash:
+                cursor.execute("UPDATE users SET password_hash = %s WHERE username = %s", (new_password_hash, username))
+            if new_permission_level is not None:
+                cursor.execute("UPDATE users SET permission_level = %s WHERE username = %s", (new_permission_level, username))
+        connection.commit()
+        logging.info(f"User '{username}' updated successfully.")
+        return jsonify({"status": "success", "message": f"User '{username}' updated."})
+    finally:
+        connection.close()
+
+# -------------------------
+# IP Ban/Whitelist APIs
+# -------------------------
+
+@app.route("/auth/ban_ip", methods=["POST"])
+def ban_ip():
+    """Ban an IP address."""
+    data = request.json
+    ip_address = data.get("ip_address")
+    reason = data.get("reason", "No reason provided")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO ip_bans (ip_address, reason) VALUES (%s, %s)", (ip_address, reason))
+        connection.commit()
+        logging.info(f"IP '{ip_address}' banned for reason: {reason}.")
+        return jsonify({"status": "success", "message": f"IP '{ip_address}' banned."})
+    finally:
+        connection.close()
+
+@app.route("/auth/whitelist_ip", methods=["POST"])
+def whitelist_ip():
+    """Add an IP address to the whitelist."""
+    data = request.json
+    ip_address = data.get("ip_address")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO ip_whitelist (ip_address) VALUES (%s)", (ip_address,))
+        connection.commit()
+        logging.info(f"IP '{ip_address}' whitelisted.")
+        return jsonify({"status": "success", "message": f"IP '{ip_address}' whitelisted."})
+    finally:
+        connection.close()
+
+# -------------------------
+# Login Handling
+# -------------------------
+
+@app.route("/auth/login", methods=["POST"])
+def login():
+    """Handle user login."""
+    data = request.json
+    username = data.get("username")
+    password_hash = data.get("password_hash")
+    ip_address = request.remote_addr
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            # Check if user exists and password matches
+            cursor.execute("SELECT id, is_banned FROM users WHERE username = %s AND password_hash = %s", (username, password_hash))
+            user = cursor.fetchone()
+
+            if user:
+                if user["is_banned"]:
+                    logging.warning(f"Banned user '{username}' attempted to log in.")
+                    return jsonify({"status": "failed", "message": "User is banned."}), 403
+
+                # Log successful login
+                cursor.execute(
+                    "INSERT INTO login_history (user_id, ip_address, successful) VALUES (%s, %s, TRUE)",
+                    (user["id"], ip_address)
+                )
+                connection.commit()
+                logging.info(f"User '{username}' logged in successfully from IP {ip_address}.")
+                return jsonify({"status": "success", "message": "Login successful."})
+            else:
+                # Log failed login
+                cursor.execute(
+                    "INSERT INTO login_history (user_id, ip_address, successful) VALUES (NULL, %s, FALSE)",
+                    (ip_address,)
+                )
+                connection.commit()
+                logging.warning(f"Failed login attempt for username '{username}' from IP {ip_address}.")
+                return jsonify({"status": "failed", "message": "Invalid username or password."}), 401
+    finally:
+        connection.close()
+
+if __name__ == "__main__":
+    logging.info("Auth Service starting...")
+    app.run(host="127.0.0.1", port=5001)

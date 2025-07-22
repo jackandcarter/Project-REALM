@@ -1,0 +1,15 @@
+{
+    "mysql_user": "",
+    "mysql_password": "",
+    "mysql_host": "127.0.0.1",
+    "mysql_port": 3306,
+    "databases": {
+        "auth": "mmorpg_auth",
+        "realms": "mmorpg_realms",
+        "world": "mmorpg_world"
+    },
+    "services": {
+        "auth_service": {"ip": "127.0.0.1", "port": 5001},
+        "realm_service": {"ip": "127.0.0.1", "port": 5002}
+    }
+}
