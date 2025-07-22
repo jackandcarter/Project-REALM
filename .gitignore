@@ -1,0 +1,30 @@
+# Unity project files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uilds?/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Bb]in/
+
+# Python artifacts
+*.pyc
+__pycache__/
+venv/
+
+# General build artifacts
+*.class
+*.dll
+*.exe
+*.so
+*.dylib
+
+# Node modules (if any)
+node_modules/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
