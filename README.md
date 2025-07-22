@@ -18,3 +18,14 @@ Open World Building - Players will be able to create empires (similar to guilds 
 <BR>
 <BR>
 We will add more to the list as features are confirmed and their mechanics and have more details.
+
+## Setup
+
+To install the Python dependencies for the Realm Server:
+
+```bash
+cd "Realm Server 1.12"
+pip install -r requirements.txt
+```
+
+This installs `flask`, `pymysql`, `sqlalchemy` and `pytest`.
