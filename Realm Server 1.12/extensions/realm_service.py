@@ -2,11 +2,26 @@ from flask import Flask, jsonify, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sql.models.realm_models import Realm
+import json
+import os
 
 app = Flask(__name__)
 
+
+def _load_config() -> dict:
+    """Load configuration from the central config.json file."""
+    config_path = os.path.join(os.path.dirname(__file__), "..", "config.json")
+    with open(config_path, "r") as file:
+        return json.load(file)
+
+
+config = _load_config()
+
 # Database connection
-DATABASE_URL = "mysql+pymysql://root:password@localhost/realm_db"
+DATABASE_URL = (
+    f"mysql+pymysql://{config['mysql_user']}:{config['mysql_password']}"
+    f"@{config['mysql_host']}/{config['databases']['realms']}"
+)
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
