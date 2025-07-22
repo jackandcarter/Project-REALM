@@ -26,3 +26,6 @@ According to `Assets/Digger/README.txt`, it requires the **Burst** package and, 
 1. Open **Window > Package Manager**.
 2. Install **Burst** (and **AI Navigation** if using Digger Pro).
 After installation the menu **Tools > Digger** becomes available.
+
+## Runtime Terrain Editor
+The script `RuntimeTerrainEditor.cs` under `Assets/Scripts` provides a simple in-game interface for editing terrain when using the Digger plugin. Attach the component to a GameObject along with **DiggerMasterRuntime** and connect dropdowns for the brush and action types as well as a slider for the brush size. At runtime you can change these parameters and left-click in the scene to apply the modifications.
