@@ -1,0 +1,157 @@
+Arkitect (Advanced really kool integrated tech elevating construction techniques)
+
+The Arkitect system is a UI Toolset for players to use that will allow the building of custom structures using crafted materials and blueprints.
+
+The UI for Arkitect will be accessible from the player's Builder Class. When switching to the Builder class the interface will change dynamically, which is where the icon for Arkitect resides.
+
+The window will have three tabs, one for Plots, one for Building Materials, and one for Blueprints.
+There will also be a Commissions system for our builders so they can create items that are in demand in other player's plots and get paid for it. Simply look at the Commissions board to see requests from other players, create the item, and place it on their plot to instantly earn the reward.
+
+The building system in game is not like other MMO's such as FFXIV where we have a single plot to work with and it's in a set zone with restrictions.
+
+Instead we have a dynamic world terrain, where many regions of land in the open world are designated as buildable or able to have a plot. Builder Plots come in different sizes and heights and will snap together when creating larger structures or moving them. This allows for modular building, group building, and realistic sectional construction where players can choose what sections of larger buildings to complete first.
+
+Building a structure is something that will require training and unlocking of blueprints and crafting of the actual structure parts in order to assemble them. Builders can work in parties or groups to hasten building times and construct large pieces together. 
+
+The Builder class will have extra options in it's UI for when they join Settlements or Kingdoms which act as guilds. These settlements can grow into full fledged kingdoms with markets and castles once they have progressed far enough. Builders will earn commission from completing major tasks for their settlement or kingdom.
+
+Settlements: These are small communities that can be formed by players when building on plots. Settlements have farms, stables, and mills as well as a Hall for meetings and settlement management. In this stage players will gather and produce required materials for the unlock quests leading up to Kingdom stage. Settlements will have minimal protection with limited blueprints to build, the unlocking and completion of kingdom quests will progress settlements to unlock more blueprints and material types.
+ 
+Kingdoms: Kingdoms can be thought of as major cities that players have created as communities. These kingdoms are player designed and once they have progressed far enough they can be teleported to, have market stalls of every kind, vendors, trainers, and other events that can be held such as festivals. Kingdoms created by players will be shown on the world map, and once they become large enough they can commission the building of an embassy and assign a member to run it, once this stage has been reached the kingdom will be marked as a major city on the map and start to gain cultural influence by other players visiting it.
+
+ Kingdoms will not have a loading screen, all structures will be visible as they are being built, and you will be able to see them rise up in the world in real time, the larger kingdoms can be seen from great distances. All kingdoms will have laws and rules for their members, and visitors will have restrictions and opportunities to join as well. Essentially we want to create a world where the players shape it as much as possible, making sure that it will be ever changing and always a brand new experience. 
+
+Weapons types and their sub types:
+
+Melee Physical
+ Daggers, Scathes, Swords, Sabers, Partisans, Claws, Twin Swords, Double Sabers
+
+Physical Ranged
+Handguns, Mech-Guns, Shots, Launchers, Bows, Mech-Bows, Boomerangs, Knives
+
+Magical Damage
+Canes, Rods, Wands, Sabers, Double Sabers, Mech-Rods.
+
+Magical Healing 
+Canes, Rods, Wands, Sabers, Double Sabers, Books.
+
+Armor categories and their types:
+
+-Head Piece
+Types: Cloth, Leather, Mail, Plate
+
+-Chest Piece
+Types: Cloth, Leather, Mail, Plate
+
+-Arm Piece
+Types: Cloth, Leather, Mail, Plate
+
+-Hand Piece
+Types: Cloth, Leather, Mail, Plate
+
+-Leg Piece
+Types: Cloth, Leather, Mail, Plate
+
+-Neck Piece 
+-Two Earring Pieces
+-Accessories
+
+Consumables
+Potions
+Food
+Instant Cast Spell Scrolls
+Other Items
+
+Key Items
+Quest Items
+Soul Stones
+Relics
+
+
+Inventory Structure:
+The inventory system is designed to manage the player's collection of items, including weapons, armor, consumables, and key items.
+Items are categorized into different categories, such as weapons, armor, consumables, and key items.
+Each item has properties such as name, category, type, description, icon sprite, and 3D model reference.
+
+Inventory Management:
+The Inventory Manager script is responsible for managing the player's inventory.
+It allows players to add, remove, and organize items within the inventory.
+The inventory is represented visually in the UI as a list view with categories and sub-categories.
+Items in the inventory are automatically arranged alphabetically within each category.
+
+Item Interactions:
+Players can interact with items in the inventory by clicking on them.
+Clicking on an item displays a tooltip with information such as name, description, and preview image.
+Certain items may have additional interactions available, such as using, discarding, trading, or synthesizing them.
+
+Dock Functionality:
+The dynamic dock provides players with quick access to frequently used items or actions.
+It functions similarly to the MacOS dock, allowing players to add, remove, and rearrange icons for items.
+The dock is represented visually as a row of icons at the bottom of the screen, which can be resized and scaled by the player.
+
+Dock Layout:
+The dock consists of two main sections: static attack buttons and customizable slots.
+The first four icons on the left side of the dock are static attack buttons, representing main attack hotkeys.
+The rest of the icons are customizable slots where players can place items for quick access.
+
+Dock Management:
+The Dock Manager script is responsible for managing the dynamic dock.
+It allows players to add, remove, and rearrange icons within the dock.
+Icons in the dock are evenly distributed horizontally, and the dock expands or shrinks automatically based on the number of icons.
+
+Item Docking:
+Players can drag items from the inventory and drop them onto the dock to create shortcuts.
+Dragging an item onto the dock adds it to the next available slot.
+Players can rearrange icons within the dock by dragging them to different positions.
+Icons will move between other icons dynamically as they are dragged around the dock.
+
+Interactions between Inventory and Dock:
+ Item Usage from Dock:
+Clicking on an item icon in the dock triggers its usage.
+For consumable items, clicking the icon instantly uses the item's effect.
+Other items may have specific actions associated with them, such as equipping weapons or using key items.
+
+Additional Features:
+UI Theme Management:
+Players can customize the appearance of the UI elements, such as colors and themes.
+The UIThemeManager script allows players to change the theme or color scheme of the UI elements dynamically.
+
+Input Handling:
+The InputManager script listens for player input events, such as mouse clicks and drag-and-drop gestures.
+It triggers corresponding actions in the game, such as dragging items from the inventory to the dock.
+
+Spell, Melee, and Ranged Fusion
+
+The mechanic to achieve fusion of multi-player abilities and attacks comes down to the design of these key features:
+
+ 
+Draggable/Touch icons + VisionOS gestures for each.
+
+Raycasting on Players to allow ability icons to be "dropped" on to them.
+
+A simple Queue system with UI indicators for each fusion type (Spells + Melee or Ranged)
+
+AoE: Radial AoE fusion between Spells and Physical AoE burst attacks
+
+Spell Interruption only happens while casters are walking/moving, then resuming the cast from where it left off.
+
+Timing System of fusion conditions, meaning if a caster moves the fuse may not happen if the cast times do not match.
+
+Fusion Request, or time limit to act on
+
+With these simple requirements we now have a more defined battle system and it's mechanics. 
+
+
+User Interface
+
+The UI features a brand new concept in UI development, you may think of it as a combination of 2D, 3D, and integrated Gesture based input. 
+
+What does this mean? Well, instead of just having a 2D overlay with icons, buttons, text, and tooltips, we are going to take this a step further and bring the UI into the game world itself. That is, right in front of the player's character.
+
+The windows, tabs, and previews included in Realm's UI will simply hover and float in front of the player and cast shadows in the 3D world. This is still a mix of 2D and 3D UI elements, the player will open their interface windows through the dock on the bottom, an overlay will appear in the 3D world and be able to have mouse, keyboard, and gesture basted actions, including depth movement and arrangement.
+
+This is made possible with Meta and Vision Pro developer libraries and Machine Learning APIs freely available to us. 
+
+Another neat feature of this UI system is that other players will see your UI panels also, however, they will appear blurred on the inside facing the player that has their UI open. On the other side, panels will appear with scrolling text and player designed profiles for everyone to see.
+
+This brings a new sense of immersion to UI interaction, viewing, and VR realism to the open world, even on non-VR systems.

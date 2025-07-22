@@ -1,0 +1,54 @@
+Warrior:
+
+Description: Masters of physical combat, Warriors excel in dealing high amounts of physical damage and protecting their allies by drawing enemy attention. They can choose to specialize as either a powerful physical attacker or a resilient tank, mitigating damage for the party. Affiliated with the Strength and Defense stats, Warriors are formidable forces on the battlefield.
+
+Wizard:
+
+Description: Harnessing the arcane arts, Wizards are powerful mages capable of casting spells that deal damage over time or instantly from a distance. Wielding staves and wands, they use incantations with elemental properties to unleash magical havoc. Affiliated with the Black Magic stat, Wizards are masters of the arcane, bringing destructive forces to bear.
+
+Time Mage:
+
+Description: Green magic practitioners, Time Mages manipulate time within a radius, growing more potent as they level. They possess the ability to teleport players and summon magical doors for transport or altering effects. Clad in robes and cloth, Time Mages utilize staves and wands. Affiliated with the Green Magic stat, they are crucial for controlling the ebb and flow of time in the party's favor.
+
+Necromancer:
+
+Description: Exclusive to Revenants, Necromancers wield dark powers to raise the dead, reanimate fallen enemies, and support party members with Necrotic abilities. Clad in plate or mail armor and wielding swords, daggers, and maces, they combine strength and dark magic. Affiliated with both Strength and Black Magic stats, Necromancers command the forces of death to serve their cause. 
+
+
+Technomancer:
+
+Description: Masters of technology, Technomancers use mechanical armor and weaponry to attack foes and support allies. Manipulating nearby machinery, they wield mechanical boomerangs and other ranged weapons. Affiliated with the Green Magic stat for support abilities, Technomancers bring a blend of technological prowess and magical support to the party.
+
+Sage:
+
+Description: The primary healing class, Sages wear robes and leather armor, utilizing Staves and Books as weapons. They specialize in healing over time, instant heals, and reviving fallen players. Affiliated with the White Magic stat, Sages are essential support classes, ensuring the party's survival through potent healing abilities.
+
+Rogue:
+
+Description: Stealthy and elusive, Rogues employ daggers and short swords for swift and deadly strikes. Clad in leather and cloth armor, they utilize sneak and quieting abilities to avoid enemy detection and provide preemptive attacks. Aligned with Strength and Agility stats, Rogues are adept at dealing burst damage and disrupting enemies.
+
+Ranger:
+
+Description: Masters of ranged combat, Rangers use bows and boomerangs, wearing cloth and leather armor. They attack from a distance, utilizing a scope for greater accuracy. As a support class, Rangers provide power-ups and defense buffs to parties and players. Affiliated with Agility and Accuracy stats, Rangers are versatile ranged hunters.
+
+Builder:
+
+Description: A non-combat class, Builders excel outside of battle, constructing structures for player communities (Empires). They craft building materials and use blueprints to create settlements, market stalls, and more. Affiliated with the Construction stat, Builders are the only class capable of using the Arkitect UI to build and shape the world around them. They contribute to the growth and aesthetics of player communities. 
+
+Professions and Crafting:
+
+REALM will come with major and minor roles for crafting, much like the builder class there are also other land and tradecraft classes. Each of these will be interwoven through the storyline and have their own side quests, unlockables and master recipes.
+
+Farmer - Responsible for planting, fertilizing, gardening, and cultivating fields. They also provide food for kept livestock.
+
+Gatherer - Foraging, picking, cutting, and harvesting of materials such as fruits or berries from trees/bushes, herbs, wood, stone, and metals.
+
+Blacksmith - Are able to create weapons and armor from metals, extract metal material from rocks and ores for smelting, and reinforce or repair materials.
+
+Tailor - Can create items from Textiles, Cloth and leather. Uses bolts and threads to create textiles, which are then used to create full garments or used in master Recipes with other materials to create many different types of sets and items. Can also create a wide variety of Housing/Building items and decor.
+
+Carpenter - Can create items from wood and some soft metal materials or Ivory/animal parts, along with important building and structure materials needed for builders. They can also make some limited accessories but are mostly creative with structure work and custom crafts. Can also make a wide variety of housing and building items such as scaffolding, benches, and fences.
+
+Painter - Able to change the color, look, and texture of items, building materials, and even textiles while working together with Tailors. Can create custom pictures using CanvasUI to draw and paint, after letting their work dry their works of art can be displayed numerous ways. Painters are often hired or commissioned by Kingdoms to have on hand for any major structure changes.
+
+Mechanic - Can build machinery related weapons and armor, along with helpful gadgets and gizmos. Also responsible for lighting in structures, among many other things.

@@ -1,0 +1,27 @@
+Eldoria:
+Location: Central Elysium
+Description: Eldoria serves as the capital city, where the ruling council resides. It is a bustling hub of trade, politics, and culture, reflecting the diversity of the human race. The city is known for its grand architecture, expansive markets, and the headquarters of the royal guard led by Captain Varian Stormforge.
+
+Arcane Haven:
+Location: Enchanted Forests of Eldros
+Description: Arcane Haven is a city nestled within the mystical Eldros forests and is home to the cat-like Felarian race. Known for its magical academies and ancient libraries, the city is a haven for rangers, wizards and scholars. Professor Seraphina Frostwind, a key character, resides here, guiding players through the mysteries of the Chrono Nexus.
+
+Nexus Outpost:
+Location: Near the Chrono Nexus
+Description: A futuristic city built around the Chrono Nexus, Nexus Outpost is now controlled by the Shadow Enclave. The city's advanced technology and eerie atmosphere create a stark contrast to the natural beauty of Elysium. It becomes a central point in the quest to uncover the secrets of the Chrono Nexus.
+
+Gearspring:
+Location: The Technomagical Metropolis
+Description: Gearspring is a bustling metropolis where the Gearlings thrive, blending magic and technology seamlessly. The city is a marvel of innovation, filled with towering spires, floating platforms, and intricate workshops. It serves as the home and cultural center of the Gearling race.
+
+Drakoria:
+Location: Crystalline Peaks
+Description: Drakoria is a mountainous region inhabited by the Crystallian race. The cities are carved into the crystal formations, creating a breathtaking landscape. The city serves as the heart of Crystallian society, where their regal leaders make decisions and maintain the balance with the elemental forces. 
+
+Netheris:
+Location: The Realm Between Life and Death
+Description: Netheris is the mysterious realm from which the race of Revenants emerge. The city is shrouded in an otherworldly mist, and ethereal structures exist in a delicate balance. Revenants revere ancestral connections and the practice of necromancy, finding solace in the realm between life and death.
+
+Luminara:
+Location: Celestial Realm / Unknown
+Description: Luminara is a celestial realm from which Lumarians originate. The city is a celestial haven filled with radiant structures, floating islands, and cosmic wonders. Lumarians gather here to seek enlightenment and connect with the cosmic energies that define their race. The exact location in the universe is unknown, even to Lumarians. It is here in Luminara where the truth as to why the Chrono Nexus exists in the first place is revealed. This is an end-game location in the Main Storyline.
