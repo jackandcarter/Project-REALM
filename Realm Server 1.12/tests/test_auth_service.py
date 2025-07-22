@@ -1,6 +1,7 @@
 import importlib.util
 import os
 import pytest
+import bcrypt
 
 # Ensure log directory exists for auth_service logging
 os.makedirs("logs", exist_ok=True)
@@ -14,7 +15,7 @@ class DummyCursor:
 
     def execute(self, sql, params):
         self.executed.append((sql, params))
-        if "SELECT id, is_banned" in sql:
+        if "FROM users" in sql and "SELECT" in sql:
             self._fetch = self.user
 
     def fetchone(self):
@@ -53,21 +54,25 @@ def client():
 
 
 def test_successful_login(monkeypatch, client):
+    hashed = bcrypt.hashpw(b"pw", bcrypt.gensalt()).decode()
+
     def fake_conn():
-        return DummyConnection({"id": 1, "is_banned": 0})
+        return DummyConnection({"id": 1, "is_banned": 0, "password_hash": hashed})
 
     monkeypatch.setattr(auth_service, "get_db_connection", fake_conn)
-    response = client.post("/auth/login", json={"username": "user", "password_hash": "pw"})
+    response = client.post("/auth/login", json={"username": "user", "password": "pw"})
     assert response.status_code == 200
     assert response.get_json()["status"] == "success"
 
 
 def test_banned_user(monkeypatch, client):
+    hashed = bcrypt.hashpw(b"pw", bcrypt.gensalt()).decode()
+
     def fake_conn():
-        return DummyConnection({"id": 2, "is_banned": 1})
+        return DummyConnection({"id": 2, "is_banned": 1, "password_hash": hashed})
 
     monkeypatch.setattr(auth_service, "get_db_connection", fake_conn)
-    response = client.post("/auth/login", json={"username": "banned", "password_hash": "pw"})
+    response = client.post("/auth/login", json={"username": "banned", "password": "pw"})
     assert response.status_code == 403
     assert response.get_json()["status"] == "failed"
 
@@ -77,6 +82,19 @@ def test_invalid_login(monkeypatch, client):
         return DummyConnection(None)
 
     monkeypatch.setattr(auth_service, "get_db_connection", fake_conn)
-    response = client.post("/auth/login", json={"username": "unknown", "password_hash": "pw"})
+    response = client.post("/auth/login", json={"username": "unknown", "password": "pw"})
     assert response.status_code == 401
     assert response.get_json()["status"] == "failed"
+
+
+def test_register_hashes_password(monkeypatch, client):
+    conn = DummyConnection()
+    monkeypatch.setattr(auth_service, "get_db_connection", lambda: conn)
+
+    response = client.post("/auth/register", json={"username": "new", "password": "secret"})
+
+    assert response.status_code == 200
+    inserted = conn.cursor_obj.executed[0][1]
+    stored_hash = inserted[1]
+    assert stored_hash != "secret"
+    assert bcrypt.checkpw(b"secret", stored_hash.encode())

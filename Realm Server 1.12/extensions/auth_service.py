@@ -3,6 +3,7 @@ import pymysql
 import logging
 import json
 import os
+import bcrypt
 
 app = Flask(__name__)
 
@@ -37,8 +38,11 @@ def register_user():
     """Register a new user."""
     data = request.json
     username = data.get("username")
-    password_hash = data.get("password_hash")
+    password = data.get("password")
     permission_level = data.get("permission_level", 0)
+
+    # Hash the plaintext password
+    password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     try:
         connection = get_db_connection()
@@ -139,17 +143,17 @@ def login():
     """Handle user login."""
     data = request.json
     username = data.get("username")
-    password_hash = data.get("password_hash")
+    password = data.get("password")
     ip_address = request.remote_addr
 
     try:
         connection = get_db_connection()
         with connection.cursor() as cursor:
-            # Check if user exists and password matches
-            cursor.execute("SELECT id, is_banned FROM users WHERE username = %s AND password_hash = %s", (username, password_hash))
+            # Retrieve stored password hash and ban status
+            cursor.execute("SELECT id, is_banned, password_hash FROM users WHERE username = %s", (username,))
             user = cursor.fetchone()
 
-            if user:
+            if user and bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
                 if user["is_banned"]:
                     logging.warning(f"Banned user '{username}' attempted to log in.")
                     return jsonify({"status": "failed", "message": "User is banned."}), 403

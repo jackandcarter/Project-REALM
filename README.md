@@ -28,4 +28,10 @@ cd "Realm Server 1.12"
 pip install -r requirements.txt
 ```
 
-This installs `flask`, `pymysql`, `sqlalchemy` and `pytest`.
+This installs `flask`, `pymysql`, `sqlalchemy`, `pytest` and `bcrypt`.
+
+## Password Security
+
+The authentication service hashes incoming passwords with `bcrypt` during
+registration. When users log in, the plaintext password is verified against the
+stored hash using `bcrypt.checkpw`.
