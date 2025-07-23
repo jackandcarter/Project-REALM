@@ -9,9 +9,10 @@ os.makedirs("logs", exist_ok=True)
 
 # Helper classes for mocking database connections
 class DummyCursor:
-    def __init__(self, user=None, session=None):
+    def __init__(self, user=None, session=None, token=None):
         self.user = user
         self.session = session
+        self.token = token
         self.executed = []
         self._fetch = None
 
@@ -21,6 +22,8 @@ class DummyCursor:
             self._fetch = self.user
         elif "FROM sessions" in sql and "SELECT" in sql:
             self._fetch = self.session
+        elif "FROM password_reset_tokens" in sql and "SELECT" in sql:
+            self._fetch = self.token
 
     def fetchone(self):
         return self._fetch
@@ -32,8 +35,8 @@ class DummyCursor:
         pass
 
 class DummyConnection:
-    def __init__(self, user=None, session=None):
-        self.cursor_obj = DummyCursor(user, session)
+    def __init__(self, user=None, session=None, token=None):
+        self.cursor_obj = DummyCursor(user, session, token)
 
     def cursor(self):
         return self.cursor_obj
@@ -140,3 +143,48 @@ def test_logout(monkeypatch, client):
     dels = [q for q in conn.cursor_obj.executed if "DELETE FROM sessions" in q[0]]
     assert len(dels) == 1
     assert dels[0][1][0] == "abc"
+
+
+def test_request_password_reset(monkeypatch, client):
+    conn = DummyConnection(user={"id": 4})
+    monkeypatch.setattr(auth_service, "get_db_connection", lambda: conn)
+
+    resp = client.post("/auth/request_password_reset", json={"username": "user"})
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert "token" in data
+    inserts = [q for q in conn.cursor_obj.executed if "INSERT INTO password_reset_tokens" in q[0]]
+    assert len(inserts) == 1
+    assert inserts[0][1][0] == 4
+
+
+def test_reset_password(monkeypatch, client):
+    future = datetime.utcnow() + timedelta(hours=1)
+    conn = DummyConnection(token={"user_id": 5, "expires_at": future, "used": 0})
+    monkeypatch.setattr(auth_service, "get_db_connection", lambda: conn)
+
+    resp = client.post(
+        "/auth/reset_password",
+        json={"token": "tok", "new_password": "newpw"},
+    )
+    assert resp.status_code == 200
+    updates = [q for q in conn.cursor_obj.executed if "UPDATE users SET password_hash" in q[0]]
+    assert len(updates) == 1
+    hashed = updates[0][1][0]
+    assert hashed != "newpw"
+    assert bcrypt.checkpw(b"newpw", hashed.encode())
+    mark_used = [q for q in conn.cursor_obj.executed if "UPDATE password_reset_tokens SET used" in q[0]]
+    assert len(mark_used) == 1
+
+
+def test_reset_password_expired(monkeypatch, client):
+    past = datetime.utcnow() - timedelta(hours=1)
+    conn = DummyConnection(token={"user_id": 6, "expires_at": past, "used": 0})
+    monkeypatch.setattr(auth_service, "get_db_connection", lambda: conn)
+
+    resp = client.post(
+        "/auth/reset_password",
+        json={"token": "tok", "new_password": "pw"},
+    )
+    assert resp.status_code == 400
+    assert resp.get_json()["status"] == "failed"
