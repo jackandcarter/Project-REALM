@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models.world_models import Base
+# Import models so that SQLAlchemy registers them with the metadata
+from .models.world_models import Base, Character, Class
 
 
 def run(config):

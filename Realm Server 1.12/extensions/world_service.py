@@ -37,6 +37,91 @@ def get_db_connection():
     )
 
 
+@app.route("/characters", methods=["POST"])
+def create_character():
+    """Create a new character."""
+    data = request.json or {}
+    account_id = data.get("account_id")
+    name = data.get("name")
+    class_id = data.get("class_id")
+    appearance = data.get("appearance", "")
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO characters (account_id, name, class_id, appearance) VALUES (%s, %s, %s, %s)",
+                (account_id, name, class_id, appearance),
+            )
+            character_id = cursor.lastrowid
+        connection.commit()
+        return jsonify({"id": character_id}), 201
+    finally:
+        connection.close()
+
+
+@app.route("/characters/<int:account_id>", methods=["GET"])
+def list_characters(account_id: int):
+    """List all characters for an account."""
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM characters WHERE account_id = %s",
+                (account_id,),
+            )
+            chars = cursor.fetchall()
+        return jsonify(chars)
+    finally:
+        connection.close()
+
+
+@app.route("/characters/<int:char_id>", methods=["PUT"])
+def update_character(char_id: int):
+    """Update a character's appearance or class."""
+    data = request.json or {}
+    appearance = data.get("appearance")
+    class_id = data.get("class_id")
+    if appearance is None and class_id is None:
+        return jsonify({"error": "No data provided"}), 400
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            if appearance is not None and class_id is not None:
+                cursor.execute(
+                    "UPDATE characters SET appearance = %s, class_id = %s WHERE id = %s",
+                    (appearance, class_id, char_id),
+                )
+            elif appearance is not None:
+                cursor.execute(
+                    "UPDATE characters SET appearance = %s WHERE id = %s",
+                    (appearance, char_id),
+                )
+            elif class_id is not None:
+                cursor.execute(
+                    "UPDATE characters SET class_id = %s WHERE id = %s",
+                    (class_id, char_id),
+                )
+        connection.commit()
+        return jsonify({"status": "success"})
+    finally:
+        connection.close()
+
+
+@app.route("/characters/<int:char_id>", methods=["DELETE"])
+def delete_character(char_id: int):
+    """Delete a character."""
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM characters WHERE id = %s", (char_id,))
+            affected = cursor.rowcount
+        connection.commit()
+        if affected:
+            return jsonify({"status": "deleted"})
+        return jsonify({"error": "Character not found"}), 404
+    finally:
+        connection.close()
+
 @app.route("/world/map/<int:map_id>", methods=["GET"])
 def get_map(map_id: int):
     """Retrieve map data for the given map ID."""

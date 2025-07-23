@@ -51,3 +51,26 @@ class PlayerPosition(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     map = relationship("Map")
+
+class Class(Base):
+    __tablename__ = "classes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    description = Column(String(255))
+
+    characters = relationship("Character", back_populates="class_")
+
+
+class Character(Base):
+    __tablename__ = "characters"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, nullable=False)
+    name = Column(String(255), nullable=False)
+    class_id = Column(Integer, ForeignKey("classes.id"), nullable=False)
+    appearance = Column(String(255))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    class_ = relationship("Class", back_populates="characters")
