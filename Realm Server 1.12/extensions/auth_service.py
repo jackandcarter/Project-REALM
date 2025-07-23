@@ -4,6 +4,8 @@ import logging
 import json
 import os
 import bcrypt
+import secrets
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -163,9 +165,24 @@ def login():
                     "INSERT INTO login_history (user_id, ip_address, successful) VALUES (%s, %s, TRUE)",
                     (user["id"], ip_address)
                 )
+                # Create session for the user
+                session_key = secrets.token_hex(32)
+                expires_at = datetime.utcnow() + timedelta(hours=1)
+                cursor.execute(
+                    "INSERT INTO sessions (user_id, session_key, ip_address, expires_at) VALUES (%s, %s, %s, %s)",
+                    (user["id"], session_key, ip_address, expires_at),
+                )
                 connection.commit()
-                logging.info(f"User '{username}' logged in successfully from IP {ip_address}.")
-                return jsonify({"status": "success", "message": "Login successful."})
+                logging.info(
+                    f"User '{username}' logged in successfully from IP {ip_address}."
+                )
+                return jsonify(
+                    {
+                        "status": "success",
+                        "message": "Login successful.",
+                        "session_key": session_key,
+                    }
+                )
             else:
                 # Log failed login
                 cursor.execute(
@@ -175,6 +192,44 @@ def login():
                 connection.commit()
                 logging.warning(f"Failed login attempt for username '{username}' from IP {ip_address}.")
                 return jsonify({"status": "failed", "message": "Invalid username or password."}), 401
+    finally:
+        connection.close()
+
+
+@app.route("/auth/validate_session", methods=["POST"])
+def validate_session():
+    """Validate an existing session key."""
+    session_key = request.json.get("session_key")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT user_id, expires_at FROM sessions WHERE session_key = %s",
+                (session_key,),
+            )
+            session = cursor.fetchone()
+        if session and session["expires_at"] > datetime.utcnow():
+            return jsonify({"status": "valid", "user_id": session["user_id"]})
+        return jsonify({"status": "invalid"}), 401
+    finally:
+        connection.close()
+
+
+@app.route("/auth/logout", methods=["POST"])
+def logout():
+    """Invalidate a session key by removing it from the database."""
+    session_key = request.json.get("session_key")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM sessions WHERE session_key = %s",
+                (session_key,),
+            )
+        connection.commit()
+        return jsonify({"status": "success", "message": "Logged out"})
     finally:
         connection.close()
 
