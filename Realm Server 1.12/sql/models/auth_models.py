@@ -51,3 +51,17 @@ class Session(Base):
     expires_at = Column(DateTime, nullable=False)
 
     account = relationship("Account", back_populates="sessions")
+
+
+class PasswordResetToken(Base):
+    """Model for password reset tokens."""
+
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    token = Column(String(255), unique=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used = Column(Boolean, default=False)
+
+    account = relationship("Account")

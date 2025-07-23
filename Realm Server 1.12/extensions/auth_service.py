@@ -233,6 +233,68 @@ def logout():
     finally:
         connection.close()
 
+
+@app.route("/auth/request_password_reset", methods=["POST"])
+def request_password_reset():
+    """Generate a password reset token for a user."""
+    username = request.json.get("username")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+            user = cursor.fetchone()
+            if not user:
+                return jsonify({"status": "failed", "message": "User not found"}), 404
+
+            token = secrets.token_hex(32)
+            expires_at = datetime.utcnow() + timedelta(hours=1)
+            cursor.execute(
+                "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user["id"], token, expires_at),
+            )
+        connection.commit()
+        return jsonify({"status": "success", "token": token})
+    finally:
+        connection.close()
+
+
+@app.route("/auth/reset_password", methods=["POST"])
+def reset_password():
+    """Reset a user's password using a valid token."""
+    data = request.json
+    token = data.get("token")
+    new_password = data.get("new_password")
+
+    try:
+        connection = get_db_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT user_id, expires_at, used FROM password_reset_tokens WHERE token = %s",
+                (token,),
+            )
+            token_row = cursor.fetchone()
+            if (
+                not token_row
+                or token_row["used"]
+                or token_row["expires_at"] <= datetime.utcnow()
+            ):
+                return jsonify({"status": "failed", "message": "Invalid or expired token"}), 400
+
+            password_hash = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+            cursor.execute(
+                "UPDATE users SET password_hash = %s WHERE id = %s",
+                (password_hash, token_row["user_id"]),
+            )
+            cursor.execute(
+                "UPDATE password_reset_tokens SET used = 1 WHERE token = %s",
+                (token,),
+            )
+        connection.commit()
+        return jsonify({"status": "success", "message": "Password updated"})
+    finally:
+        connection.close()
+
 if __name__ == "__main__":
     logging.info("Auth Service starting...")
     app.run(host="127.0.0.1", port=5001)
